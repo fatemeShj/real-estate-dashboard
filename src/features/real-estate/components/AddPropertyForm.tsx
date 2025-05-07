@@ -1,5 +1,6 @@
 "use client";
 
+import { propertySchema } from "../schemas/propertySchema";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useForm } from "@tanstack/react-form";
@@ -12,8 +13,16 @@ export default function AddPropertyForm() {
       location: "",
     },
     onSubmit: async ({ value }) => {
-      console.log("Form data:", value);
-      alert("the form has been sent");
+      const result = propertySchema.safeParse(value);
+
+      if (!result.success) {
+        console.log("Validation errors:", result.error.flatten().fieldErrors);
+        alert("Please fix the validation errors.");
+        return;
+      }
+
+      console.log("Valid data:", result.data);
+      alert("Form submitted!");
     },
   });
 
